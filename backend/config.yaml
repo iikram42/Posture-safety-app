@@ -1,0 +1,7 @@
+img_size: 224
+num_classes: 2
+class_names:
+  - safe
+  - unsafe
+device: "auto"  # "cuda", "cpu", or "auto"
+model_checkpoint: "./best_model.pt"
