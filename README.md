@@ -30,18 +30,21 @@ Just trying to stop back pain.
 posture-safety-app/
 │
 ├── backend/
-│ ├── app.py # Main backend server
-│ ├── config.yaml # Thresholds / settings
-│ └── requirements.txt # Python dependencies
+│   ├── app.py              # Main FastAPI backend
+│   ├── config.yaml         # Model + API configuration (classes, checkpoint path, etc.)
+│   └── requirements.txt    # Python dependencies
 │
 └── frontend/
-├── public/
-│ └── index.html
-├── src/
-│ ├── App.js
-│ ├── index.js
-│ └── App.css
-└── package.json
+    ├── public/
+    │   └── index.html      # App root HTML
+    │
+    ├── src/
+    │   ├── App.js          # UI logic + API call
+    │   ├── App.css         # Styling for UI components
+    │   └── index.js        # React entry point
+    │
+    └── package.json        # Node dependencies + scripts
+
 
 ---
 
