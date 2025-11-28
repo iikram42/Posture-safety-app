@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const API_BASE = "http://localhost:8000";
+const API_URL = "http://127.0.0.1:8000";
 
 function App() {
   const [file, setFile] = useState(null);
@@ -11,17 +11,19 @@ function App() {
   const [error, setError] = useState("");
 
   const handleFileChange = (e) => {
-    const selected = e.target.files && e.target.files[0];
+    const selected = e.target.files?.[0] || null;
+
     setResult(null);
     setError("");
+
     if (!selected) {
       setFile(null);
       setPreviewUrl("");
       return;
     }
+
     setFile(selected);
-    const url = URL.createObjectURL(selected);
-    setPreviewUrl(url);
+    setPreviewUrl(URL.createObjectURL(selected));
   };
 
   const handleSubmit = async (e) => {
@@ -39,7 +41,8 @@ function App() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE}/predict`, {
+
+      const response = await fetch(`${API_URL}/predict`, {
         method: "POST",
         body: formData,
       });
@@ -53,15 +56,17 @@ function App() {
       setResult(data);
     } catch (err) {
       console.error(err);
-      setError("Prediction failed. Check backend logs or try another image.");
+      setError(`Prediction failed: ${err.message || "Unknown error"}`);
     } finally {
       setLoading(false);
     }
   };
 
   const renderProbabilities = () => {
-    if (!result || !result.probabilities) return null;
+    if (!result?.probabilities) return null;
+
     const entries = Object.entries(result.probabilities);
+
     return (
       <ul className="prob-list">
         {entries.map(([cls, prob]) => (
@@ -76,11 +81,11 @@ function App() {
     );
   };
 
-  const riskBadge = () => {
+  const renderRiskBadge = () => {
     if (!result) return null;
+
     const { predicted_class, unsafe_score } = result;
     const percentage = (unsafe_score * 100).toFixed(1);
-
     const isUnsafe = predicted_class.toLowerCase() === "unsafe";
 
     return (
@@ -102,7 +107,7 @@ function App() {
           <h1>Posture Safety Classifier</h1>
           <p>
             Upload a frame or image. The model will classify it as{" "}
-            <strong>safe</strong> or <strong>unsafe</strong>, and report the
+            <strong>safe</strong> or <strong>unsafe</strong> and report the
             unsafe probability.
           </p>
         </header>
@@ -127,7 +132,11 @@ function App() {
                 </div>
               )}
 
-              <button type="submit" disabled={loading} className="submit-btn">
+              <button
+                type="submit"
+                disabled={loading}
+                className="submit-btn"
+              >
                 {loading ? "Analyzing..." : "Run Safety Check"}
               </button>
             </form>
@@ -138,7 +147,8 @@ function App() {
           {result && (
             <section className="card">
               <h2>2. Model Output</h2>
-              {riskBadge()}
+
+              {renderRiskBadge()}
 
               <div className="output-row">
                 <span className="output-label">Predicted class:</span>
@@ -155,13 +165,14 @@ function App() {
               <div className="output-row">
                 <span className="output-label">Probabilities:</span>
               </div>
+
               {renderProbabilities()}
             </section>
           )}
         </main>
 
         <footer className="app-footer">
-          <span>Backend: {API_BASE}</span>
+          <span>Backend: {API_URL}</span>
         </footer>
       </div>
     </div>
