@@ -1,94 +1,90 @@
-﻿# 🧍‍♂️ Posture Safety App
+# 🧍‍♂️ Posture Safety App
 
-A simple posture detection system that prevents you from sitting like a shrimp.  
-It uses pose detection to track your body position and warns when you're slouching.
-
----
+A simple posture detection system that prevents you from sitting like a shrimp. It uses pose detection to track your body position and warns you when you're slouching.
 
 ## 🚀 Features
-- Real-time posture monitoring
-- Frontend UI (camera + visualization)
-- Backend API for posture logic
-- Lightweight ML / pose detection
+- Real-time posture evaluation
+- Frontend UI (image upload + visualization)
+- Backend REST API for inference
+- Lightweight ML / posture classification
 - Easy to run locally
-- Can be extended for alerts, timers, logs, etc.
+- Extendable (alerts, logs, dashboards, etc.)
 
----
+## 🧠 How It Works
+1. User uploads a posture image/frame.
+2. The backend extracts pose features.
+3. Model computes posture safety probability.
+4. Result → "safe" or "unsafe".
 
-## 🧠 What Actually Happens
-1. Webcam feeds are processed.
-2. Pose landmarks (shoulder, neck, spine, etc.) are detected.
-3. Posture metrics are calculated.
-4. If posture drops below the threshold → user gets warned.
-
-Not medical.  
-Just trying to stop back pain.
-
----
+> ⚠️ Not medical. Just trying to stop back pain.
 
 ## 📦 Project Structure
 posture-safety-app/
 │
 ├── backend/
-│   ├── app.py              # Main FastAPI backend
-│   ├── config.yaml         # Model + API configuration (classes, checkpoint path, etc.)
+│   ├── app.py              # FastAPI backend server
+│   ├── config.yaml         # Model/device/settings configuration
 │   └── requirements.txt    # Python dependencies
 │
 └── frontend/
     ├── public/
-    │   └── index.html      # App root HTML
-    │
+    │   └── index.html      # Root HTML
     ├── src/
-    │   ├── App.js          # UI logic + API call
-    │   ├── App.css         # Styling for UI components
+    │   ├── App.js          # UI + API calls
+    │   ├── App.css         # Styling
     │   └── index.js        # React entry point
-    │
-    └── package.json        # Node dependencies + scripts
-
-
----
+    └── package.json        # JS dependencies + scripts
 
 ## 🛠️ Tech Stack
-**Backend**
+Backend:
 - Python
-- Flask/FastAPI (depending on implementation)
-- OpenCV / Mediapipe
+- FastAPI + Uvicorn
+- Torch / Torchvision
+- Pillow
+- YAML config
 
-**Frontend**
-- React / JS
-- Basic UI
+Frontend:
+- React
+- Fetch API
+- CSS UI
 
----
+## 🏃‍♂️ How to Run Locally
 
-## 🏃‍♂️ How to Run
+### Backend
+cd backend
+pip install -r requirements.txt
+uvicorn app:app --reload
 
-### 🔹 Backend
+Backend URL:
+http://127.0.0.1:8000
 
----
+Swagger API Docs:
+http://127.0.0.1:8000/docs
+
+### Frontend
+cd frontend
+npm install
+npm start
+
+Frontend URL:
+http://localhost:3000
 
 ## 📊 How Posture is Evaluated
-- Neck + shoulder positions
+- Shoulder alignment
+- Neck tilt
 - Spine angle
-- Head tilt
-- Relative ratios between joints
+- Relative ratios between pose joints
+When thresholds are crossed → posture flagged as unsafe.
 
-When the metrics cross a threshold → **bad posture**
-
----
-
-## 💡 Ideas for Improvements
-- Pose classification model
-- Store history of posture
-- Dashboard
+## 💡 Future Improvements
+- Train an actual pose classifier
+- Posture history storage
+- Analytics dashboard
 - User profiles
-- Alerts / notifications
-- Mobile version
-
----
+- Alerts / reminders
+- Mobile app version
 
 ## 📌 Disclaimer
 Not a medical device.
 I am not your physiotherapist.
 This app just screams at you when you sit like a goblin.
-
----
