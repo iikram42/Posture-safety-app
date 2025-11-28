@@ -23,6 +23,7 @@ def load_config(config_path: str = "config.yaml") -> dict:
 
 cfg = load_config("config.yaml")
 
+# Device selection
 if cfg.get("device", "auto") == "cuda":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 elif cfg.get("device") == "cpu":
@@ -43,15 +44,20 @@ def build_model(num_classes: int) -> nn.Module:
     return model
 
 
+# --- Model loading with graceful fallback ---
 model = build_model(NUM_CLASSES)
-if not os.path.exists(CHECKPOINT_PATH):
-    raise FileNotFoundError(f"Model checkpoint not found at {CHECKPOINT_PATH}")
 
-checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
-state_dict = checkpoint.get("model_state_dict", checkpoint)
-model.load_state_dict(state_dict)
+if os.path.exists(CHECKPOINT_PATH):
+    checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
+    state_dict = checkpoint.get("model_state_dict", checkpoint)
+    model.load_state_dict(state_dict)
+    print(f"[INFO] Loaded model checkpoint from {CHECKPOINT_PATH}")
+else:
+    print(f"[WARNING] Model checkpoint not found at {CHECKPOINT_PATH}. Using randomly initialized weights.")
+
 model.to(device)
 model.eval()
+# -------------------------------------------
 
 
 transform = transforms.Compose([
